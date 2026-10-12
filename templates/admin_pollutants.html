@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Pollutants | Marine Research</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, sans-serif; background: #071b27; color: #e8f2ef; }
+        header, nav { padding: 20px 6%; background: #102d3a; border-bottom: 1px solid #28505a; }
+        nav { display: flex; flex-wrap: wrap; gap: 18px; }
+        a { color: #a8d8c8; text-decoration: none; }
+        main { padding: 30px 6%; }
+        .panel { background: #102d3a; border: 1px solid #28505a; border-radius: 12px; padding: 22px; margin-bottom: 22px; }
+        label { display: block; margin: 16px 0 8px; }
+        input { width: 100%; padding: 12px; border-radius: 7px; border: 1px solid #52717a; background: #071b27; color: white; }
+        button { margin-top: 18px; padding: 12px 18px; border: 0; border-radius: 7px; background: #a8d8c8; color: #071b27; font-weight: bold; cursor: pointer; }
+        .message { padding: 12px; background: #173e43; border-radius: 8px; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 18px; }
+        th, td { padding: 12px; border-bottom: 1px solid #28505a; text-align: left; }
+        th { color: #a8d8c8; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Manage Pollutants</h1>
+        <p>Add pollutant labels to the reference table.</p>
+    </header>
+
+    <nav>
+        <a href="{{ url_for('admin_dashboard') }}">Admin Home</a>
+        <a href="{{ url_for('admin_audit_logs') }}">Audit Logs</a>
+        <a href="{{ url_for('home') }}">Main Dashboard</a>
+    </nav>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <p class="message">{{ message }}</p>
+            {% endfor %}
+        {% endwith %}
+
+        <section class="panel">
+            <h2>Add a Pollutant</h2>
+            <p>Enter a unique pollutant label and its group.</p>
+
+            <form method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <label for="pollutant_name">Pollutant Name</label>
+                <input id="pollutant_name" name="pollutant_name"
+                       type="text" maxlength="150" required>
+
+                <label for="pollutant_group">Pollutant Group</label>
+                <input id="pollutant_group" name="pollutant_group"
+                       type="text" maxlength="100">
+
+                <button type="submit">Add Pollutant</button>
+            </form>
+        </section>
+
+        <section class="panel">
+            <h2>Existing Pollutants ({{ pollutants|length }})</h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Pollutant Name</th>
+                            <th>Group</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pollutant in pollutants %}
+                            <tr>
+                                <td>{{ pollutant.pollutant_id }}</td>
+                                <td>{{ pollutant.pollutant_name }}</td>
+                                <td>{{ pollutant.pollutant_group or '-' }}</td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="3">No pollutants found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

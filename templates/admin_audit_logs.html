@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Logs | Marine Research</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, sans-serif; background: #071b27; color: #e8f2ef; }
+        header, nav { padding: 20px 6%; background: #102d3a; border-bottom: 1px solid #28505a; }
+        nav { display: flex; flex-wrap: wrap; gap: 18px; }
+        a { color: #a8d8c8; text-decoration: none; }
+        main { padding: 30px 6%; }
+        .panel { background: #102d3a; border: 1px solid #28505a; border-radius: 12px; padding: 22px; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 18px; }
+        th, td { padding: 12px; border-bottom: 1px solid #28505a; text-align: left; }
+        th { color: #a8d8c8; }
+        .muted { color: #b5c8ca; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Administrative Audit Logs</h1>
+        <p>Review recorded administrative activity.</p>
+    </header>
+
+    <nav>
+        <a href="{{ url_for('admin_dashboard') }}">Admin Home</a>
+        <a href="{{ url_for('admin_pollutants') }}">Manage Pollutants</a>
+        <a href="{{ url_for('home') }}">Main Dashboard</a>
+    </nav>
+
+    <main>
+        <section class="panel">
+            <h2>Activity History</h2>
+            <p class="muted">Showing the latest {{ logs|length }} recorded events.</p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Log ID</th>
+                            <th>Admin</th>
+                            <th>Action</th>
+                            <th>Details</th>
+                            <th>Date and Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                            <tr>
+                                <td>{{ log.log_id }}</td>
+                                <td>{{ log.username or 'Deleted admin' }}</td>
+                                <td>{{ log.action }}</td>
+                                <td>{{ log.details or '-' }}</td>
+                                <td>{{ log.created_at }}</td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="5">No audit events recorded yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

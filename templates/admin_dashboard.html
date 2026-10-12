@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Marine Research</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #071b27;
+            color: #e8f2ef;
+        }
+        header {
+            padding: 22px 6%;
+            background: #102d3a;
+            border-bottom: 1px solid #28505a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        h1 { margin: 0; color: #a8d8c8; }
+        header p { color: #b5c8ca; margin-bottom: 0; }
+        nav {
+            padding: 15px 6%;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #28505a;
+        }
+        a { color: #a8d8c8; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        main { padding: 30px 6%; }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin: 24px 0;
+        }
+        .card, .panel {
+            background: #102d3a;
+            border: 1px solid #28505a;
+            border-radius: 12px;
+            padding: 22px;
+        }
+        .card p { color: #b5c8ca; }
+        .number { font-size: 30px; color: #a8d8c8; }
+        .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+        .action {
+            display: inline-block;
+            background: #a8d8c8;
+            color: #071b27;
+            padding: 12px 16px;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+        button {
+            border: 1px solid #52717a;
+            background: transparent;
+            color: #e8f2ef;
+            padding: 9px 14px;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+        .messages { padding: 12px; background: #173e43; border-radius: 8px; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+        th, td { padding: 12px; border-bottom: 1px solid #28505a; text-align: left; }
+        th { color: #a8d8c8; }
+        .muted { color: #b5c8ca; }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <h1>Admin Dashboard</h1>
+            <p>Marine Pollution Monitoring &amp; Ecological Impact Analytics</p>
+        </div>
+        <form method="POST" action="{{ url_for('admin_logout') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit">Log Out</button>
+        </form>
+    </header>
+
+    <nav>
+        <a href="{{ url_for('home') }}">Main Dashboard</a>
+        <a href="{{ url_for('explore') }}">Explore Data</a>
+        <a href="{{ url_for('analytics') }}">Analytics</a>
+        <a href="{{ url_for('pollution_map') }}">Pollution Map</a>
+        <a href="{{ url_for('admin_dashboard') }}">Admin Home</a>
+        <a href="{{ url_for('admin_pollutants') }}">Manage Pollutants</a>
+        <a href="{{ url_for('admin_audit_logs') }}">Audit Logs</a>
+    </nav>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <p class="messages">{{ message }}</p>
+            {% endfor %}
+        {% endwith %}
+
+        <h2>Welcome, {{ session.get('admin_username', 'Administrator') }}</h2>
+        <p class="muted">Manage the platform and review administrative activity.</p>
+
+        <section class="cards">
+            <div class="card">
+                <p>Registered Admins</p>
+                <div class="number">{{ total_admins }}</div>
+            </div>
+            <div class="card">
+                <p>Pollutant Labels</p>
+                <div class="number">{{ total_pollutants }}</div>
+            </div>
+            <div class="card">
+                <p>Total Audit Events</p>
+                <div class="number">{{ total_logs }}</div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <h2>Administration</h2>
+            <div class="actions">
+                <a class="action" href="{{ url_for('admin_pollutants') }}">Manage Pollutants</a>
+                <a class="action" href="{{ url_for('admin_audit_logs') }}">View Audit Logs</a>
+            </div>
+        </section>
+
+        <section class="panel" style="margin-top: 22px;">
+            <h2>Recent Activity</h2>
+            {% if recent_logs %}
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Action</th>
+                                <th>Details</th>
+                                <th>Date and Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in recent_logs %}
+                                <tr>
+                                    <td>{{ log.action }}</td>
+                                    <td>{{ log.details or '-' }}</td>
+                                    <td>{{ log.created_at }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="muted">No activity recorded yet.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

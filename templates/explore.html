@@ -1,0 +1,399 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Data | Marine Research</title>
+
+    <style>
+        :root {
+            --bg: #101d27;
+            --surface: #192a32;
+            --surface-light: #223740;
+            --border: #34464b;
+            --text: #e9e4d7;
+            --muted: #a5b7b1;
+            --green: #a7b9a5;
+            --coral: #d98268;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        header {
+            padding: 20px 6%;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .brand { font-size: 19px; font-weight: 700; }
+
+        nav { display: flex; gap: 22px; flex-wrap: wrap; }
+
+        nav a, .reset {
+            color: var(--green);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        nav a:hover, .reset:hover { color: var(--coral); }
+
+        main {
+            width: 90%;
+            max-width: 1400px;
+            margin: 44px auto;
+        }
+
+        .eyebrow {
+            color: var(--coral);
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: clamp(30px, 4vw, 44px);
+            margin: 14px 0;
+            font-weight: 600;
+        }
+
+        h2 { font-size: 20px; font-weight: 500; }
+
+        .intro {
+            color: var(--muted);
+            max-width: 750px;
+            line-height: 1.7;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 28px;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 17px;
+            align-items: end;
+        }
+
+        label {
+            display: block;
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 9px;
+        }
+
+        select, button, .map-link {
+            width: 100%;
+            min-height: 45px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        select {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        select:focus { outline: 1px solid var(--green); }
+
+        button {
+            background: var(--green);
+            color: var(--bg);
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover { background: #c1d0bf; }
+
+        .reset {
+            display: inline-block;
+            margin-top: 17px;
+        }
+
+        .result-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .result-heading h2 { margin-bottom: 5px; }
+
+        .count { color: var(--green); font-size: 14px; }
+
+        .muted {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .map-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            text-decoration: none;
+            background: transparent;
+            border: 1px solid var(--green);
+            color: var(--green);
+        }
+
+        .map-link:hover {
+            background: var(--surface-light);
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1000px;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 14px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            color: var(--green);
+            font-weight: 600;
+            white-space: nowrap;
+            background: var(--surface-light);
+        }
+
+        td { color: var(--text); line-height: 1.5; }
+
+        tbody tr:hover { background: var(--surface-light); }
+
+        .empty { padding: 25px 0; color: var(--muted); }
+
+        .source-note {
+            border-left: 3px solid var(--coral);
+            padding: 5px 0 5px 16px;
+            margin-top: 28px;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 25px 6%;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 900px) {
+            .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 550px) {
+            header { align-items: flex-start; flex-direction: column; }
+            nav { gap: 16px; }
+            main { width: 94%; margin-top: 30px; }
+            .panel { padding: 17px; }
+            .filters { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <div class="brand">≈ Marine Research</div>
+    <nav aria-label="Main navigation">
+        <a href="/">Dashboard</a>
+        <a href="/explore">Explore Data</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/map">Pollution Map</a>
+    </nav>
+</header>
+
+<main>
+    <div class="eyebrow">Coastal research / Data explorer</div>
+    <h1>Explore monitoring records.</h1>
+
+    <p class="intro">
+        Explore the coastal pollution dataset using database-driven filters.
+        Examine recorded pollutant labels, sampling locations, collection dates
+        and measurement details.
+    </p>
+
+    <section class="panel">
+        <div class="eyebrow">Search / Filter</div>
+        <h2>Find specific records</h2>
+
+        <form method="GET" action="/explore" class="filters">
+            <div>
+                <label for="pollutant">Pollutant label</label>
+                <select name="pollutant" id="pollutant">
+                    <option value="">All pollutants</option>
+                    {% for item in pollutants %}
+                    <option value="{{ item.parameter }}"
+                        {% if selected_pollutant == item.parameter %}selected{% endif %}>
+                        {{ item.parameter }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="location">Sampling location</label>
+                <select name="location" id="location">
+                    <option value="">All locations</option>
+                    {% for item in locations %}
+                    <option value="{{ item.specific_location }}"
+                        {% if selected_location == item.specific_location %}selected{% endif %}>
+                        {{ item.specific_location }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="year">Fiscal year</label>
+                <select name="year" id="year">
+                    <option value="">All years</option>
+                    {% for item in years %}
+                    <option value="{{ item.fiscal_year }}"
+                        {% if selected_year|string == item.fiscal_year|string %}selected{% endif %}>
+                        {{ item.fiscal_year }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <button type="submit">Apply Filters</button>
+            </div>
+        </form>
+
+        <a href="/explore" class="reset">Clear all filters ↗</a>
+    </section>
+
+    <section class="panel">
+        <div class="result-heading">
+            <div>
+                <div class="eyebrow">Database results</div>
+                <h2>Monitoring records</h2>
+            </div>
+            <span class="count">{{ records|length }} records displayed</span>
+        </div>
+
+        <p class="muted">
+            Showing up to 200 matching records. The map link uses the selected
+            filters, not just the rows currently visible in this table.
+        </p>
+
+        <div class="actions">
+            <a class="map-link"
+               href="{{ url_for('pollution_map',
+                   pollutant=selected_pollutant,
+                   location=selected_location,
+                   year=selected_year) }}">
+                View matching records on Map ↗
+            </a>
+        </div>
+
+        {% if records %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Record ID</th>
+                        <th>Collection Date</th>
+                        <th>Sampling Location</th>
+                        <th>Species / Sample</th>
+                        <th>Pollutant</th>
+                        <th>Recorded Value</th>
+                        <th>Qualifier</th>
+                        <th>Detection Limit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in records %}
+                    <tr>
+                        <td>{{ row.object_id }}</td>
+                        <td>{{ row.collection_date or "—" }}</td>
+                        <td>{{ row.specific_location or "—" }}</td>
+                        <td>{{ row.scientific_name or "—" }}</td>
+                        <td>{{ row.parameter or "—" }}</td>
+                        <td>
+                            {% if row.value is not none %}
+                                {{ row.value }} {{ row.unit or "" }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+                        <td>{{ row.qualifier or "—" }}</td>
+                        <td>
+                            {% if row.detection_limit is not none %}
+                                {{ row.detection_limit }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty">
+            <h3>No matching records found</h3>
+            <p>Try changing your filters or clearing them to view all records.</p>
+            <a href="/explore" class="reset">Show all records</a>
+        </div>
+        {% endif %}
+    </section>
+
+    <section class="source-note">
+        <h3>Reading the data responsibly</h3>
+        <p class="muted">
+            Source: NOAA Coastal Pollution Data Explorer. The current export
+            covers the Pacific Coast of California. Record counts do not indicate
+            pollution severity. Interpret recorded values with their units,
+            qualifiers and detection limits. An association alone does not prove
+            ecological causation.
+        </p>
+    </section>
+</main>
+
+<footer>
+    Marine Pollution Monitoring &amp; Ecological Impact Analytics
+    <br>
+    Database-driven academic project
+</footer>
+</body>
+</html>

@@ -1,0 +1,389 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pollution Map | Marine Research</title>
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+    <style>
+        :root {
+            --bg: #071923;
+            --panel: #102934;
+            --text: #edf5f2;
+            --muted: #a5bbb9;
+            --green: #8bc8b2;
+            --border: #294550;
+            --coral: #d98268;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        header {
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            color: var(--green);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        nav a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        nav a:hover { color: var(--green); }
+
+        main {
+            width: 86%;
+            max-width: 1400px;
+            margin: 42px auto;
+        }
+
+        .eyebrow {
+            color: var(--green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 12px;
+        }
+
+        h1 {
+            font-size: clamp(30px, 4vw, 44px);
+            margin: 12px 0;
+        }
+
+        h2 { font-size: 20px; font-weight: 500; }
+
+        .intro {
+            color: var(--muted);
+            line-height: 1.7;
+            max-width: 760px;
+        }
+
+        .panel {
+            margin-top: 25px;
+            padding: 22px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+            align-items: end;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        select, button, .clear-link {
+            width: 100%;
+            min-height: 44px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        select {
+            color: var(--text);
+            background: var(--bg);
+            border: 1px solid var(--border);
+        }
+
+        button {
+            border: none;
+            background: var(--green);
+            color: var(--bg);
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover { background: #b6d8c9; }
+
+        .clear-link {
+            display: inline-flex;
+            width: auto;
+            align-items: center;
+            color: var(--green);
+            text-decoration: none;
+            margin-top: 12px;
+            padding-left: 0;
+        }
+
+        .map-card {
+            margin-top: 25px;
+            padding: 12px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+        }
+
+        #map {
+            height: 520px;
+            width: 100%;
+            border-radius: 10px;
+            background: #dce8e4;
+        }
+
+        .result-status {
+            margin-top: 16px;
+            color: var(--green);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .note {
+            margin-top: 20px;
+            padding: 18px;
+            border-left: 3px solid var(--green);
+            background: var(--panel);
+            border-radius: 7px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .leaflet-popup-content-wrapper,
+        .leaflet-popup-tip {
+            background: #102934;
+            color: #edf5f2;
+        }
+
+        footer {
+            margin-top: 35px;
+            padding: 24px 7%;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        @media (max-width: 900px) {
+            .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 650px) {
+            main { width: 92%; margin: 28px auto; }
+            #map { height: 420px; }
+        }
+
+        @media (max-width: 480px) {
+            .filters { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <div class="brand">MARINE RESEARCH</div>
+    <nav aria-label="Main navigation">
+        <a href="/">Dashboard</a>
+        <a href="/explore">Explore Data</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/map">Pollution Map</a>
+    </nav>
+</header>
+
+<main>
+    <div class="eyebrow">Geographical data exploration</div>
+    <h1>Sampling Locations Map</h1>
+
+    <p class="intro">
+        Explore sampling records geographically. Select a pollutant,
+        location, or fiscal year to show only matching measurements on the map.
+    </p>
+
+    <section class="panel">
+        <div class="eyebrow">Map filters</div>
+        <h2>Filter mapped records</h2>
+
+        <form method="GET" action="/map" class="filters">
+            <div>
+                <label for="pollutant">Pollutant label</label>
+                <select name="pollutant" id="pollutant">
+                    <option value="">All pollutants</option>
+                    {% for item in pollutants %}
+                    <option value="{{ item.parameter }}"
+                        {% if selected_pollutant == item.parameter %}selected{% endif %}>
+                        {{ item.parameter }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="location">Sampling location</label>
+                <select name="location" id="location">
+                    <option value="">All locations</option>
+                    {% for item in locations %}
+                    <option value="{{ item.specific_location }}"
+                        {% if selected_location == item.specific_location %}selected{% endif %}>
+                        {{ item.specific_location }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="year">Fiscal year</label>
+                <select name="year" id="year">
+                    <option value="">All years</option>
+                    {% for item in years %}
+                    <option value="{{ item.fiscal_year }}"
+                        {% if selected_year|string == item.fiscal_year|string %}selected{% endif %}>
+                        {{ item.fiscal_year }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <button type="submit">Apply Map Filters</button>
+            </div>
+        </form>
+
+        <a href="/map" class="clear-link">Clear map filters ↗</a>
+
+        <div class="result-status" id="result-status" aria-live="polite">
+            Loading map records...
+        </div>
+    </section>
+
+    <div class="map-card">
+        <div id="map"></div>
+    </div>
+
+    <div class="note">
+        <strong>Important:</strong>
+        Markers represent individual records with available coordinates.
+        Multiple records may share a location. Marker density represents
+        recorded sampling activity, not pollution severity or ecological damage.
+        Interpret values with their units, qualifiers and detection limits.
+    </div>
+</main>
+
+<footer>
+    Marine Pollution Monitoring &amp; Ecological Impact Analytics System
+    · Academic DBMS project
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script id="map-data" type="application/json">
+{{ map_records | tojson }}
+</script>
+
+<script>
+    const records = JSON.parse(
+        document.getElementById("map-data").textContent
+    );
+
+    const map = L.map("map").setView([34.5, -120.5], 6);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors",
+        maxZoom: 18
+    }).addTo(map);
+
+    const points = [];
+    const status = document.getElementById("result-status");
+
+    records.forEach(record => {
+        const lat = Number(record.latitude);
+        const lng = Number(record.longitude);
+
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+        if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return;
+
+        const marker = L.circleMarker([lat, lng], {
+            radius: 6,
+            color: "#246d5b",
+            weight: 1,
+            fillColor: "#8bc8b2",
+            fillOpacity: 0.85
+        }).addTo(map);
+
+        const popup = document.createElement("div");
+
+        function addLine(label, value) {
+            const line = document.createElement("div");
+            const strong = document.createElement("strong");
+
+            strong.textContent = label + ": ";
+            line.appendChild(strong);
+            line.appendChild(document.createTextNode(
+                value === null || value === undefined || value === ""
+                    ? "Not available"
+                    : String(value)
+            ));
+            popup.appendChild(line);
+        }
+
+        addLine("Location", record.specific_location);
+        addLine("Pollutant label", record.parameter);
+        addLine("Recorded value", record.value);
+        addLine("Unit", record.unit);
+        addLine("Qualifier", record.qualifier);
+        addLine("Detection limit", record.detection_limit);
+        addLine("Collection date", record.collection_date);
+        addLine("Fiscal year", record.fiscal_year);
+        addLine("Record ID", record.object_id);
+
+        marker.bindPopup(popup);
+        points.push([lat, lng]);
+    });
+
+    if (points.length > 0) {
+        if (points.length === 1) {
+            map.setView(points[0], 12);
+        } else {
+            map.fitBounds(points, {
+                padding: [25, 25],
+                maxZoom: 10
+            });
+        }
+
+        status.textContent =
+            points.length + " matching records with valid coordinates shown. " +
+            (records.length >= 2000
+                ? "The map is limited to 2,000 records."
+                : "");
+    } else {
+        status.textContent =
+            "No matching records with valid coordinates were found. " +
+            "Try changing or clearing the filters.";
+        map.setView([34.5, -120.5], 6);
+    }
+</script>
+</body>
+</html>
