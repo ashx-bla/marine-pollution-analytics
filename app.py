@@ -20,6 +20,9 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 if not app.secret_key:
     raise RuntimeError("FLASK_SECRET_KEY environment variable is not set.")
 CSRFProtect(app)
+@app.route("/health")
+def health():
+    return {"status": "ok"}, 200
 
 
 # ==================================================
