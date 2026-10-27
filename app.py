@@ -1,6 +1,5 @@
 
 import os
-from datetime import timedelta
 from functools import wraps
 from collections import defaultdict
 from statistics import mean, median
@@ -1177,10 +1176,6 @@ def admin_dashboard():
 
         recent_logs = cursor.fetchall()
 
-        for log in recent_logs:
-            if log["created_at"]:
-                log["created_at"] += timedelta(hours=5, minutes=30)
-
         return render_template(
             "admin_dashboard.html",
             total_admins=total_admins,
@@ -1275,10 +1270,6 @@ def admin_audit_logs():
             LIMIT 200
         """)
         logs = cursor.fetchall()
-
-        for log in logs:
-            if log["created_at"]:
-                log["created_at"] += timedelta(hours=5, minutes=30)
 
         return render_template(
             "admin_audit_logs.html",

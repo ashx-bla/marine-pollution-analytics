@@ -1,3 +1,7 @@
+from multiprocessing import connection
+import os
+import mysql.connector
+
 import os
 import mysql.connector
 
@@ -13,4 +17,10 @@ def get_db_connection():
             "marine_pollution_db"
         )
     )
+
+    # Set MySQL session timezone to IST
+    cursor = connection.cursor()
+    cursor.execute("SET time_zone = '+05:30'")
+    cursor.close()
+
     return connection
