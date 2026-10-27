@@ -1129,6 +1129,7 @@ def admin_login():
                         cursor, "LOGIN", "Administrator logged in"
                     )
                     conn.commit()
+                    app.logger.warning("LOGIN AUDIT COMMIT COMPLETED")
                 except Exception:
                     conn.rollback()
                     app.logger.exception(
@@ -1294,6 +1295,7 @@ def admin_logout():
             cursor, "LOGOUT", "Administrator logged out"
         )
         conn.commit()
+        app.logger.warning("LOGOUT AUDIT COMMIT COMPLETED")
     except Exception:
         conn.rollback()
         app.logger.exception("Could not save logout audit log")
