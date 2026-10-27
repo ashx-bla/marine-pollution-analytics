@@ -40,23 +40,12 @@ def admin_required(view_function):
 
 
 def write_audit_log(cursor, action, details):
-    app.logger.warning(
-        "AUDIT DEBUG: action=%s, admin_id=%s",
-        action,
-        session.get("admin_id")
-    )
-
     cursor.execute(
         """
         INSERT INTO audit_logs (admin_id, action, details)
         VALUES (%s, %s, %s)
         """,
         (session.get("admin_id"), action, details[:500])
-    )
-
-    app.logger.warning(
-        "AUDIT DEBUG: insert affected %s row(s)",
-        cursor.rowcount
     )
 
 
