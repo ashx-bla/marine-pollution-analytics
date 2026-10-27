@@ -1102,6 +1102,7 @@ def admin_login():
         return redirect(url_for("admin_dashboard"))
 
     if request.method == "POST":
+        app.logger.warning("ADMIN LOGIN POST RECEIVED")
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
 
@@ -1284,6 +1285,7 @@ def admin_audit_logs():
 @app.route("/admin/logout", methods=["POST"])
 @admin_required
 def admin_logout():
+    app.logger.warning("ADMIN LOGOUT ROUTE RECEIVED")
     conn = get_db_connection()
     cursor = conn.cursor()
 
