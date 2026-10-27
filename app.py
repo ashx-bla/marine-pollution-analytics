@@ -111,6 +111,55 @@ def get_comparable_values(records):
 
     return groups
 
+    def classify_pollutant_risk(pollutant, sample_matrix, concentration):
+
+    """
+
+    Classifies risk based on pollutant and sample matrix (Water, Tissue, Sediment).
+
+    """
+
+    pollutant_lower = clean_text(pollutant).lower()
+
+    matrix_lower = clean_text(sample_matrix).lower()
+
+
+
+    if "mercury" in pollutant_lower:
+
+        if "water" in matrix_lower:
+
+            if concentration < 0.001: return 'Low'
+
+            elif concentration <= 0.005: return 'Moderate'
+
+            else: return 'High'
+
+        elif "tissue" in matrix_lower or "mussel" in matrix_lower:
+
+            if concentration < 0.1: return 'Low'
+
+            elif concentration <= 0.3: return 'Moderate'
+
+            else: return 'High'
+
+            
+
+    if concentration < 10:
+
+        return 'Low'
+
+    elif concentration <= 50:
+
+        return 'Moderate'
+
+    else:
+
+        return 'High'
+
+def clean_text(text):
+    return str(text).strip() if text else ""
+
 
 # ==================================================
 # POLLUTANT-SPECIFIC EDUCATIONAL GUIDANCE
