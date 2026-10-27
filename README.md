@@ -31,6 +31,15 @@ The application is designed for exploratory environmental analysis and education
 - **Data Integrity & Security:** Secure password hashing (Werkzeug) for admin authentication and parameterized queries protecting against SQL injection.
 - **Audit Logging:** Automated database logging tracking administrative actions, logins, and data modifications with timestamps.
 
+## Database Schema Overview
+
+The MySQL relational database (`marine_pollution_db`) consists of the following core tables:
+
+- `noaa_pollution_data`: Main table storing geolocated environmental measurements, sample matrices, concentrations, units, and qualifiers.
+- `pollutants`: Lookup/dictionary table standardizing parameter names and chemical categories.
+- `admin_users`: Stores administrator credentials with Werkzeug-hashed passwords.
+- `audit_logs`: Records all administrative operations (logins, updates, additions) linked via foreign key to `admin_users`.
+
 ## Tech Stack
 
 - Python
