@@ -186,3 +186,9 @@ http://localhost:5000/
 
 This project does not currently declare a license. If you plan to share or distribute it publicly, add an appropriate open-source license file.
 > Project status: Active and running!
+
+## Team & Contributors
+
+- **Sanjana Dyaga** (`sanjana-web67`) — Database Integration, Git Workflow & Analytics
+- **Shiban** (`Shibxn`) — Frontend Development & UI Design
+- **Project Lead / Collaborator** (`ashx-bla`) — Core Platform Architecture
