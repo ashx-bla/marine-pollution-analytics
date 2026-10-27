@@ -1,5 +1,4 @@
-# Marine Pollution Dashboard
-
+# Marine Pollution Dashboard 
 A Flask-based web application for exploring and analyzing marine pollution and environmental monitoring data, with a focus on NOAA-style pollution records and supporting admin management tools.
 
 ## Overview
@@ -195,6 +194,7 @@ http://localhost:5000/
 
 This project does not currently declare a license. If you plan to share or distribute it publicly, add an appropriate open-source license file.
 > Project status: Active and running!
+
 
 ## Team & Contributors
 
