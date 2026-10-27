@@ -1140,6 +1140,40 @@ def pollution_map():
         cursor.close()
         conn.close()
 
+# ==================================================
+# POLLUTION RISK CLASSIFICATION DASHBOARD
+# ==================================================
+
+@app.route("/risk-dashboard")
+def risk_dashboard():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        cursor.execute("""
+            SELECT object_id, parameter AS pollutant, specific_location AS region,
+                   matrix, value, unit, collection_date
+            FROM noaa_pollution_data
+            WHERE value IS NOT NULL
+            ORDER BY collection_date DESC
+            LIMIT 100
+        """)
+        records = cursor.fetchall()
+
+        for row in records:
+            row['risk_category'] = classify_pollutant_risk(
+                row['pollutant'],
+                row['matrix'],
+                row['value']
+            )
+
+        return render_template(
+            "risk_dashboard.html",
+            data=records
+        )
+    finally:
+        cursor.close()
+        conn.close()
+
 
 # ==================================================
 # ADMIN LOGIN

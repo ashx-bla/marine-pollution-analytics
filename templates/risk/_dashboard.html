@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pollution Risk Classification Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container" style="padding: 30px;">
+        <h1>Marine Pollution Risk Dashboard</h1>
+        <a href="{{ url_for('home') }}">← Back to Home</a>
+        
+        <table border="1" cellpadding="10" style="width:100%; margin-top: 20px; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th>ID</th>
+                    <th>Pollutant</th>
+                    <th>Region</th>
+                    <th>Matrix</th>
+                    <th>Value</th>
+                    <th>Unit</th>
+                    <th>Date</th>
+                    <th>Risk Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    <td>{{ row.object_id }}</td>
+                    <td>{{ row.pollutant }}</td>
+                    <td>{{ row.region }}</td>
+                    <td>{{ row.matrix }}</td>
+                    <td>{{ row.value }}</td>
+                    <td>{{ row.unit }}</td>
+                    <td>{{ row.collection_date }}</td>
+                    <td>
+                        <span style="padding: 4px 8px; border-radius: 4px; font-weight: bold;
+                            {% if row.risk_category == 'High' %} background-color: #ffcccc; color: #cc0000;
+                            {% elif row.risk_category == 'Moderate' %} background-color: #ffe5cc; color: #cc6600;
+                            {% else %} background-color: #ccffcc; color: #006600; {% endif %}">
+                            {{ row.risk_category }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
