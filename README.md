@@ -60,9 +60,23 @@ Before running the project, make sure you have:
 - access to a database user with privileges to create and modify tables
 - a configured environment for Flask secrets and database connection settings
 
+
 ## Environment Variables
 
-Set the following environment variables before running the app:
+Configure the following environment variables before running the application.
+
+### Windows PowerShell
+
+```powershell
+$env:FLASK_SECRET_KEY="your-secret-key"
+$env:DB_HOST="localhost"
+$env:DB_PORT="3306"
+$env:DB_USER="root"
+$env:DB_PASSWORD="your-password"
+$env:DB_NAME="marine_pollution_db"
+```
+
+### macOS / Linux
 
 ```bash
 export FLASK_SECRET_KEY="your-secret-key"
@@ -73,16 +87,8 @@ export DB_PASSWORD="your-password"
 export DB_NAME="marine_pollution_db"
 ```
 
-On Windows PowerShell:
-
-```powershell
-$env:FLASK_SECRET_KEY="your-secret-key"
-$env:DB_HOST="localhost"
-$env:DB_PORT="3306"
-$env:DB_USER="root"
-$env:DB_PASSWORD="your-password"
-$env:DB_NAME="marine_pollution_db"
-```
+Replace the example values with your own configuration.
+Use a strong, private Flask secret key and never commit real database passwords or secret keys to GitHub.
 
 ## Database Setup
 
@@ -175,6 +181,15 @@ http://localhost:5000/
 
 - The analytics pages provide source hypotheses and safety guidance based on the selected pollutant type, but they are educational summaries rather than confirmed cause attribution.
 - The app is intended for environmental data exploration, not for emergency response or formal regulatory interpretation.
+
+
+## Troubleshooting
+
+- **Database connection errors:** Make sure MySQL is running and the database credentials are correct.
+- **Missing Python modules:** Activate your virtual environment and run `pip install -r requirements.txt`.
+- **CSV file not found:** Verify that `data/noaa_pollution_expanded.csv` exists in the project directory.
+- **Port already in use:** Stop the other application using port 5000 or configure Flask to use another available port.
+- **Missing environment variables:** Set the required Flask and database environment variables before starting the application.
 
 ## License
 
