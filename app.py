@@ -41,9 +41,8 @@ def admin_required(view_function):
 
 def write_audit_log(cursor, action, details):
     app.logger.warning(
-        "AUDIT DEBUG: action=%s, database=%s, admin_id=%s",
+        "AUDIT DEBUG: action=%s, admin_id=%s",
         action,
-        cursor.connection.database,
         session.get("admin_id")
     )
 
