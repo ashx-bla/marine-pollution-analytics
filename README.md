@@ -25,6 +25,12 @@ The application is designed for exploratory environmental analysis and education
 - Audit log viewing for administrative activity
 - Health endpoint for simple service checks
 
+## Database & Security Highlights
+
+- **Relational Schema:** Structured relational tables for NOAA pollution records, normalized pollutant lists, administrator accounts, and secure audit tracking.
+- **Data Integrity & Security:** Secure password hashing (Werkzeug) for admin authentication and parameterized queries protecting against SQL injection.
+- **Audit Logging:** Automated database logging tracking administrative actions, logins, and data modifications with timestamps.
+
 ## Tech Stack
 
 - Python
