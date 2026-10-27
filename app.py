@@ -1,5 +1,6 @@
 
 import os
+from datetime import timedelta
 from functools import wraps
 from collections import defaultdict
 from statistics import mean, median
@@ -1156,7 +1157,6 @@ def admin_login():
 def admin_dashboard():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-
     try:
         cursor.execute("SELECT COUNT(*) AS total FROM admin_users")
         total_admins = cursor.fetchone()["total"]
@@ -1174,7 +1174,12 @@ def admin_dashboard():
             ORDER BY created_at DESC, log_id DESC
             LIMIT 10
         """, (session["admin_id"],))
+
         recent_logs = cursor.fetchall()
+
+        for log in recent_logs:
+            if log["created_at"]:
+                log["created_at"] += timedelta(hours=5, minutes=30)
 
         return render_template(
             "admin_dashboard.html",
@@ -1186,6 +1191,7 @@ def admin_dashboard():
     finally:
         cursor.close()
         conn.close()
+
 
 
 # ==================================================
@@ -1269,6 +1275,10 @@ def admin_audit_logs():
             LIMIT 200
         """)
         logs = cursor.fetchall()
+
+        for log in logs:
+            if log["created_at"]:
+                log["created_at"] += timedelta(hours=5, minutes=30)
 
         return render_template(
             "admin_audit_logs.html",
