@@ -197,7 +197,6 @@ This project does not currently declare a license. If you plan to share or distr
 
 
 ## Team & Contributors
-
+- **Aashi Sahu** (`ashx-bla`) — Core Platform Architecture, Data Model Design, Trends Analysis
 - **Sanjana Dyaga** (`sanjana-web67`) — Database Integration, Git Workflow & Analytics
 - **Shiban** (`Shibxn`) — Frontend Development & UI Design
-- **Project Lead / Collaborator** (`ashx-bla`) — Core Platform Architecture
